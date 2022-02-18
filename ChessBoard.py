@@ -53,19 +53,33 @@ class ChessBoard:
         else:
             return False
 
+    '''
+    returns the color on the square with coordinates x and y
+    '''
+    def which_color(self,x,y):
+        if((x+y)%2==0):
+            color=(144,238,144)
+        else:
+            color=(50,205,50)
+        return color
+
+
+    '''
+    returns true if the movement allowed according to piece
+    '''
     def move(self,piece_name,current,next):
         # move conditions for each peice
         allowed=False
         straight=False
         diagonal=False
         back=False
-        left=False
-        right=False
+        left=False # straight left
+        right=False # straight right
         x_change=next[0]-current[0]
         y_change=-1*(next[1]-current[1])
         if(abs(x_change)>0 and abs(y_change)>0):
             diagonal=True
-        if(y_change>0 and x_change==0):
+        if(abs(y_change)>0 and x_change==0):
             straight=True
         if(y_change<0):
             back=True
@@ -88,4 +102,20 @@ class ChessBoard:
             if(not back and diagonal):
                 if(self.Board[next[1]][next[0]]!='-' and y_change==1 and abs(x_change)==1):
                     allowed=True
+        if(piece_name[0:2]=='WN'):
+            if((abs(x_change)==1 and abs(y_change)==2) or (abs(x_change)==2 and abs(y_change)==1)):
+                allowed=True
+        if(piece_name[0:2]=='WB'):
+            if(diagonal==True and not straight):
+                allowed=True
+        if(piece_name[0:2]=='WR'):
+            if(left==True or right==True or straight==True):
+                allowed=True
+        if(piece_name[0:2]=='WK'):
+            if(x_change<=1 and y_change<=1):
+                allowed=True
+        if(piece_name[0:2]=='WQ'):
+            if(diagonal or right or straight or left):
+                allowed=True
+        
         return allowed
