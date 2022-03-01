@@ -201,11 +201,11 @@ class ChessBoard:
         if(piece_name[1]=='K'):
             if(x_change<=1 and y_change<=1):
                 allowed=True
-            if(self.Board[next[1]][next[0]][1]=='R'):
+            if(self.Board[next[1]][next[0]]!='-' and self.Board[next[1]][next[0]][1]=='R'):
                 allowed=True
             x_pos=current[0]
             y_pos=current[1]
-            if(self.Board[next[1]][next[0]]=='WR2'):
+            if(self.Board[next[1]][next[0]]!='-' and self.Board[next[1]][next[0]][1]=='R'):
                 # nothing in between
                 # King side castle
                 if((next[0]-current[0])>0):
