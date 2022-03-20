@@ -24,14 +24,14 @@ class ChessPiece(ABC):
         "#": "#",
     }
     _lookup = {
-        1: "a",
-        2: "b",
-        3: "c",
-        4: "d",
-        5: "e",
-        6: "f",
-        7: "g",
-        8: "h",
+        0: "a",
+        1: "b",
+        2: "c",
+        3: "d",
+        4: "e",
+        5: "f",
+        6: "g",
+        7: "h",
         "#": "#",
     }
 
@@ -46,10 +46,10 @@ class ChessPiece(ABC):
         self._image = None
         self._pos = list("##")
         if pos:
-            self._pos = [self._reverse_lookup[x] for x in pos]
+            self._pos = tuple(self._reverse_lookup[x] for x in pos)
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} ({self._pos[0]}, {self._pos[1]})>"
+        return f"<{self.__class__.__name__} ({self._lookup.get(self._pos[0])}{self._pos[1] + 1})>"
 
     def __getitem__(self, val):
         return self._pos[val]
@@ -61,19 +61,6 @@ class ChessPiece(ABC):
     def move(self, board, pos) -> bool:
         pos = [self._reverse_lookup.get(x) for x in pos]
         return self._validate(board, pos)
-
-    pass
-
-
-class Blank(ChessPiece):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-
-    def _validate(self) -> bool:
-        raise InvalidMove
-
-    def move(self) -> bool:
-        raise InvalidMove
 
     pass
 
@@ -90,9 +77,8 @@ class Pawn(ChessPiece):
         """
         Pawn moves in straight line and attacks sideways
         """
-        print(f"DIFFX: {diff_x}")
+        print(f"DIFFX: {diff_x}; DIFFY: {diff_y}")
         if diff_x != 0:
-            print("THIS SHOULD ENGAGE")
             if not attack:
                 return False
         _move_direction = 1 if self._white else -1
@@ -117,6 +103,8 @@ class Knight(ChessPiece):
         How does a knight move?
         Knight moves in a L shape line and is tricky to grasp quickly!
         """
+        if diff_x == 0 or diff_y == 0:
+            return False
         if (abs(diff_x) + abs(diff_y)) != 3:
             return False
         return True
